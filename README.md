@@ -32,6 +32,7 @@ Croque.configure do |config|
   config.start_matcher = /\-\- : Started/
   config.end_matcher = /\-\- : Completed/
   config.lower_time = 1000 # ms
+  config.except_path_matcher = /\/assets\//
 end
 ```
 
