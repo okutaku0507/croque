@@ -1,5 +1,9 @@
+# ENV => test
+ENV['RAILS_ENV'] ||= 'test'
+
 require "bundler/setup"
 require "croque"
+require "pry"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

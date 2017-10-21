@@ -1,10 +1,14 @@
 # Croque
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/croque`. To experiment with that code, run `bin/console` for an interactive prompt.
+Croque is a simple aggregator of log. It will be useful for notifications of slow request.
 
-TODO: Delete this and the text above, and describe your gem
+By the way,  **Croque** Monsieur is a baked or fried boiled ham and cheese sandwich. The dish originated in French cafés and bars as a quick snack.
+
+<img src="https://user-images.githubusercontent.com/4189626/31853769-560ed0b6-b6c9-11e7-8166-8351a0eecc8e.jpg" width="200px">
 
 ## Installation
+
+This gem is developed as a plugin for rails gem.
 
 Add this line to your application's Gemfile:
 
@@ -12,32 +16,88 @@ Add this line to your application's Gemfile:
 gem 'croque'
 ```
 
-And then execute:
+## Configuration
 
-    $ bundle
+Croque's default configurations.
 
-Or install it yourself as:
-
-    $ gem install croque
+```ruby
+Croque.configure do |config|
+  config.root_path = Pathname.new(Rails.root || Dir.pwd)
+  config.log_dir_path = config.root_path.join('log')
+  config.store_path = config.root_path.join('tmp', 'croque', Rails.env)
+  config.log_file_matcher = /#{Rails.env}.log/
+  config.hour_matcher = /dateThour/
+  config.severity_matcher = /severity/
+  config.matcher = /\[#{config.hour_matcher.source}:\d{2}:\d{2}\.\d+ #{config.severity_matcher.source}\]/
+  config.start_matcher = /\-\- : Started/
+  config.end_matcher = /\-\- : Completed/
+  config.lower_time = 1000 # ms
+end
+```
 
 ## Usage
 
-TODO: Write usage instructions here
+Croque treats the date as a unit.
+
+First, do aggregate.
+
+```ruby
+Croque.aggregate(Date.yesterday)
+```
+
+Then, csv files will be output to the directory pointed  by store_path.
+
+Next, get ranking as Array.
+
+```ruby
+ranking_list = Croque.ranking(Date.yesterday)
+=> [
+  #<Croque::Monsieur:0x00007fd727979ce8 @date=Sat, 21 Oct 2017, @hour=12, @id="3441444b-a6d4-460f-a37d-821e699d7a63", @time="1200.0">,
+  #<Croque::Monsieur:0x00007fd727929400 @date=Sat, 21 Oct 2017, @hour=8, @id="becb857d-31f2-47ee-9029-e034e07c7f06", @time="812.0">,
+  #<Croque::Monsieur:0x00007fd727929400 @date=Sat, 21 Oct 2017, @hour=23, @id="c29c7e0d-a56d-468e-8ab0-636e09b44996", @time="564.0">
+]
+
+# monsieur is a ranking object
+monsieur = ranking_list[0]
+=> #<Croque::Monsieur:0x00007fd727979ce8 @date=Sat, 21 Oct 2017, @hour=12, @id="3441444b-a6d4-460f-a37d-821e699d7a63", @time="1200.0">
+
+monsieur.body
+I, [2017-10-21T12:55:04.566846 #22212]  INFO -- : Started GET "/demo?tomato=delicious&kyouha=hare" for 127.0.0.1 at 2017-10-21 12:55:30 +0900
+I, [2017-10-21T12:53:06.566846 #22212]  INFO -- : Processing by Rails::WelcomeController#index as HTML
+I, [2017-10-21T12:53:10.807962 #22212]  INFO -- : Completed 200 OK in 1200ms (Views: 199.9ms | ActiveRecord: 1000.1ms)
+=> [
+  "I, [2017-10-21T12:55:04.566846 #22212]  INFO -- : Started GET \"/demo?tomato=delicious&kyouha=hare\" for 127.0.0.1 at 2017-10-21 12:55:30 +0900",
+  "I, [2017-10-21T12:53:06.566846 #22212]  INFO -- : Processing by Rails::WelcomeController#index as HTML",
+  "I, [2017-10-21T12:53:10.807962 #22212]  INFO -- : Completed 200 OK in 1200ms (Views: 199.9ms | ActiveRecord: 1000.1ms)"
+]
+
+monsieur.views_time
+=> 199.9 # ms
+
+monsieur.active_record_time
+=> 1000.1 # ms
+
+monsieur.processing_time
+=> 1200.0 # ms
+
+monsieur.full_path
+=> "/demo?tomato=delicious&kyouha=hare"
+
+monsieur.path_info
+=> "/demo"
+
+monsieur.query
+=> "tomato=delicious&kyouha=hare"
+```
+
 
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/croque. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
-## License
-
-The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
-## Code of Conduct
-
-Everyone interacting in the Croque project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/croque/blob/master/CODE_OF_CONDUCT.md).
+## Copyright
+Copyright (c) 2017 Takuya Okuhara. Licensed under the  [MIT License](http://opensource.org/licenses/MIT).

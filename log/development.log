@@ -1,0 +1,27 @@
+# Logfile created on 2017-10-21 12:52:41 +0900 by logger.rb/56815
+I, [2017-10-21T12:53:04.553805 #11178]  INFO -- : Started GET "/" for 127.0.0.1 at 2017-10-21 12:53:04 +0900
+I, [2017-10-21T12:53:04.566846 #11178]  INFO -- : Processing by Rails::WelcomeController#index as HTML
+I, [2017-10-21T12:55:04.566846 #22212]  INFO -- : Started GET "/demo?tomato=delicious&kyouha=hare" for 127.0.0.1 at 2017-10-21 12:55:30 +0900
+I, [2017-10-21T12:53:05.807962 #11178]  INFO -- : Completed 200 OK in 241ms (Views: 8.4ms)
+I, [2017-10-21T12:53:06.566846 #22212]  INFO -- : Processing by Rails::WelcomeController#index as HTML
+I, [2017-10-21T12:53:10.807962 #22212]  INFO -- : Completed 200 OK in 1200ms (Views: 199.9ms | ActiveRecord: 1000.1ms)
+
+I, [2017-10-22T08:55:28.313141 #20032]  INFO -- : Started GET "/" for 127.0.0.1 at 2017-10-21 12:55:28 +0900
+I, [2017-10-22T08:55:28.112109 #20032]  INFO -- : Processing by Rails::WelcomeController#index as HTML
+I, [2017-10-22T08:55:28.898918 #20032]  INFO -- : Completed 200 OK in 6ms (Views: 8.0ms)
+
+I, [2017-10-23T21:55:29.579666 #90113]  INFO -- : Started GET "/" for 127.0.0.1 at 2017-10-21 12:55:29 +0900
+I, [2017-10-23T21:55:29.580536 #90113]  INFO -- : Processing by Rails::WelcomeController#index as HTML
+I, [2017-10-23T21:55:29.587382 #90113]  INFO -- : Completed 200 OK in 7ms (Views: 7.3ms)
+
+I, [2017-10-24T05:55:30.531547 #70212]  INFO -- : Started GET "/" for 127.0.0.1 at 2017-10-21 12:55:30 +0900
+I, [2017-10-24T05:55:30.532415 #70212]  INFO -- : Processing by Rails::WelcomeController#index as HTML
+I, [2017-10-24T05:55:30.539637 #70212]  INFO -- : Completed 200 OK in 7ms (Views: 10.3ms)
+
+I, [2017-10-25T00:55:30.531547 #92121]  INFO -- : Started GET "/" for 127.0.0.1 at 2017-10-21 12:55:30 +0900
+I, [2017-10-25T00:55:30.532415 #92121]  INFO -- : Processing by Rails::WelcomeController#index as HTML
+I, [2017-10-25T00:55:30.539637 #92121]  INFO -- : Completed 200 OK in 7ms (Views: 100.3ms)
+
+I, [2017-10-26T16:55:30.531547 #89211]  INFO -- : Started GET "/" for 127.0.0.1 at 2017-10-21 12:55:30 +0900
+I, [2017-10-26T16:55:30.532415 #89211]  INFO -- : Processing by Rails::WelcomeController#index as HTML
+I, [2017-10-26T16:55:30.539637 #89211]  INFO -- : Completed 200 OK in 7ms (Views: 102.3ms)
