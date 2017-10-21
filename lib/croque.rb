@@ -19,7 +19,7 @@ module Croque
     include ActiveSupport::Configurable
     config_accessor :root_path, :log_dir_path, :store_path,
       :log_file_matcher, :hour_matcher, :matcher, :severity_matcher,
-      :start_matcher, :end_matcher, :lower_time
+      :start_matcher, :end_matcher, :lower_time, :except_path_matcher
   end
 
   configure do |config|
@@ -33,6 +33,7 @@ module Croque
     config.start_matcher = /\-\- : Started/
     config.end_matcher = /\-\- : Completed/
     config.lower_time = 1000 # ms
+    config.except_path_matcher = /\/assets/
   end
 
   class << self

@@ -153,6 +153,10 @@ module Croque
         Croque.config.end_matcher
       end
 
+      def except_path_matcher
+        Croque.config.except_path_matcher
+      end
+
       def convert_matcher(matcher:, date: nil, hour: nil, severity: nil)
         # Regexp => String
         matcher = matcher.source
@@ -265,7 +269,7 @@ module Croque
       def get_start_indexes(lines)
         # map index only matched line
         lines.map.with_index do |line, index|
-          index if line.match(start_matcher)
+          index if line.match(start_matcher) && !line.match(except_path_matcher)
         end.compact
       end
 
