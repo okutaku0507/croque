@@ -13,12 +13,9 @@ module Croque
     def body
       # return Array
       lines = get_line[7].split("\t")
-      lines = lines.map{ |line| line.strip }
-      lines.each do |line|
-        print "#{line}\n"
+      lines.map do |line|
+        line.strip.gsub(/\e\[\d+m/, '')
       end
-      lines = lines.map{ |line| line.gsub(/\e\[\d+m/, '') }
-      lines
     end
 
     def views_time
