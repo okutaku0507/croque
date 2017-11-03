@@ -91,6 +91,25 @@ monsieur.query
 => "tomato=delicious&kyouha=hare"
 ```
 
+paginate
+
+```ruby
+Croque.ranking(Date.yesterday. page: 1, per: 50)
+```
+
+all dates whose the ranking exist
+
+```ruby
+Croque.all
+=> [Sat, 21 Oct 2017]
+```
+
+total count of the ranking
+
+```ruby
+Croque.total_count(Date.yesterday)
+=> 1
+```
 
 ## Development
 
