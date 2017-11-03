@@ -46,14 +46,29 @@ module Croque
     end
 
     class << self
-      def get_list(date, limit)
+      def get_list(date, page, per)
+        # maybe String
+        page_num = (page || 1).to_i
+        per_num = (per || total_count(date)).to_i
+        # get csv data
         csv_data = File.open(ranking_path(date), "r").read.gsub(/\r/, "")
         csv = CSV.new(csv_data)
         # Sorted lines as ranking
-        csv.to_a[0..(limit-1)].map do |line|
+        start = ((page_num-1)*per_num)
+        # csv to Array
+        lines = csv.to_a
+        # start..end
+        lines = lines.slice(start, per_num) || []
+        # generate this class instance
+        lines.map do |line|
           # line = [date, hour, uuid, processing_time (ms)]
           self.new(*line)
         end
+      end
+
+      def total_count(date)
+        wc_result = `wc -l #{ranking_path(date)}`
+        wc_result.match(/\d+/)[0].try(:to_i)
       end
 
       private

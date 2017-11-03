@@ -24,7 +24,9 @@ module Croque
           while (k-1)*linage < line_count.to_i
             fragment = `head -n #{k*1000} #{file} | tail -n #{linage}`
             fragment_lines = fragment.lines
-            lines += fragment_lines.select{ |line| line.match(date_matcher(date)) }
+            lines += fragment_lines.select do |line|
+              line.match(date_matcher(date))
+            end
             k += 1
           end
           # extract the matched line (Date)
@@ -62,6 +64,16 @@ module Croque
         store_csv(ranking_path(date), data)
       end
 
+      def all
+        paths = Dir.glob(store_path + '*')
+        paths = paths.select do |path|
+          path.match(/\d{4}\-\d{2}\-\d{2}/)
+        end
+        paths.map do |path|
+          Date.parse(File.basename(path))
+        end
+      end
+
       private
       def log_files
         Dir::glob(dir_path + '*').select do |path|
@@ -73,8 +85,12 @@ module Croque
         Croque.config.log_dir_path
       end
 
+      def store_path
+        Croque.config.store_path
+      end
+
       def ranking_path(date)
-        Croque.config.store_path.join("#{date}", "ranking.csv")
+        store_path.join("#{date}", "ranking.csv")
       end
 
       def log_file_matcher
@@ -82,7 +98,7 @@ module Croque
       end
 
       def remove_files(date)
-        path = Croque.config.store_path.join("#{date}")
+        path = store_path.join("#{date}")
         if Dir.exist?(path)
           FileUtils.remove_dir(path)
         end
@@ -92,7 +108,7 @@ module Croque
         # matcher
         matcher = convert_matcher(matcher: Croque.config.matcher)
         # head
-        head_lines = `head -n 10 #{file}`
+        head_lines = `head -n 100 #{file}`
         # get lines as Array
         head_lines = head_lines.lines
         head_line = head_lines.select do |line|
@@ -100,7 +116,7 @@ module Croque
         end.first
         head_date = get_date_from_line(head_line)
         # tail
-        tail_lines = `tail -n 10 #{file}`
+        tail_lines = `tail -n 100 #{file}`
         # get lines as Array
         tail_lines = tail_lines.lines
         tail_line = tail_lines.select do |line|
@@ -190,7 +206,7 @@ module Croque
       end
 
       def csv_path(date, hour)
-        Croque.config.store_path.join("#{date}", "#{hour}.csv")
+        store_path.join("#{date}", "#{hour}.csv")
       end
 
       def csv_option

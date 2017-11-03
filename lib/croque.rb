@@ -41,9 +41,20 @@ module Croque
       Croque::Aggregator.aggregate(date)
     end
 
-    def ranking(date, limit: 0)
+    def all
+      # Get Aggregated List
+      # return date list as Array
+      Croque::Aggregator.all
+    end
+
+    def ranking(date, page: nil, per: nil)
       # Get ranking as Sorted Array
-      Croque::Monsieur.get_list(date, limit)
+      # limit = 0 => all lines
+      Croque::Monsieur.get_list(date, page, per)
+    end
+
+    def total_count(date)
+      Croque::Monsieur.total_count(date)
     end
   end
 end
