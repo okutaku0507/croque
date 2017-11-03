@@ -77,9 +77,10 @@ module Croque
     private
     def get_line
       self.line ||= if File.exist?(csv_path)
-        csv_data = File.open(csv_path, "r").read.gsub(/\r/, "")
-        csv = CSV.new(csv_data)
-        csv.to_a.find{ |line| line[0] == self.id }
+        line = `cat #{csv_path} | grep '#{self.id}'`
+        line.split(/\",/).map do |row|
+          row.gsub(/\"/, '').strip
+        end
       else
         nil
       end
