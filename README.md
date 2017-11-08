@@ -33,6 +33,7 @@ Croque.configure do |config|
   config.end_matcher = /\-\- : Completed/
   config.lower_time = 1000 # ms
   config.except_path_matcher = /\/assets\//
+  config.logger = Logger.new(config.log_dir_path.join("croque.#{Rails.env}.log"))
 end
 ```
 

@@ -12,16 +12,20 @@ module Croque
 
       def aggregate_per_hour(date)
         # scan each file
+        log("aggregate logs per hour on #{date} start")
         log_files.each do |file|
+          log("check skippable of #{file}")
           # check skippable
           next if skippable?(date, file)
+          log("aggregate logs of #{file}")
           # all lines
           linage = 1000
           wc_result = `wc -l #{file}`
-          line_count = wc_result.match(/\d+/)[0]
+          line_count = wc_result.match(/\d+/)[0].to_i
           k = 1
           lines = []
-          while (k-1)*linage < line_count.to_i
+          while (k-1)*linage < line_count
+            log("aggregate logs for #{(k-1)*linage}-#{k*linage} in #{line_count} on #{date}")
             fragment = `head -n #{k*1000} #{file} | tail -n #{linage}`
             fragment_lines = fragment.lines
             lines += fragment_lines.select do |line|
@@ -33,14 +37,18 @@ module Croque
           lines = lines
           hours.each do |hour|
             # craete csv file
+            log("create csv for #{date} #{hour} hour")
             create_csv(date, hour, lines)
           end
         end
+        log("aggregate logs per hour on #{date} end")
       end
 
       def generate_ranking(date)
+        log("generate ranking on #{date} start")
         array = []
         hours.each do |hour|
+          log("generate array for ranking in #{date} #{hour} hour")
           # csv data
           path = csv_path(date, hour)
           # next if no file
@@ -50,18 +58,20 @@ module Croque
           csv.to_a.each do |line|
             uuid = line[0]
             processing_time = line[1].to_f
-            # next if processing_time < config.lower_time
             next if low?(processing_time)
             array << [date, hour, uuid, processing_time]
           end
         end
+        log("sort array for ranking on #{date}")
         # Processing Time Desc
         array = array.sort{ |a, b| b[3] <=> a[3] }
+        log("generate ranking csv on #{date}")
         # Generate CSV
         data = CSV.generate("", csv_option) do |csv|
           array.each{ |line| csv << line }
         end
         store_csv(ranking_path(date), data)
+        log("generate ranking on #{date} end")
       end
 
       def all
@@ -348,6 +358,10 @@ module Croque
 
       def low?(time)
         time < Croque.config.lower_time
+      end
+
+      def log(message)
+        Croque.config.logger.try(:info, message)
       end
     end
   end
