@@ -24,6 +24,7 @@ module Croque
           line_count = wc_result.match(/\d+/)[0].to_i
           k = 1
           lines = []
+          # extract the matched line (Date)
           while (k-1)*linage < line_count
             log("aggregate logs for #{(k-1)*linage}-#{k*linage} in #{line_count} on #{date}")
             fragment = `head -n #{k*1000} #{file} | tail -n #{linage}`
@@ -33,8 +34,6 @@ module Croque
             end
             k += 1
           end
-          # extract the matched line (Date)
-          lines = lines
           hours.each do |hour|
             # craete csv file
             log("create csv for #{date} #{hour} hour")
